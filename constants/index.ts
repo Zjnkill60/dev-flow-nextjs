@@ -1,5 +1,3 @@
-import { SidebarLink } from "@/types";
-
 export const THEMES = [
   { value: "light", label: "Light", icon: "/assets/icons/sun.svg" },
   { value: "dark", label: "Dark", icon: "/assets/icons/moon.svg" },
@@ -48,7 +46,7 @@ export const GlobalSearchFilters = [
   { name: "Tag", value: "tag" },
 ];
 
-export const sidebarLinks: SidebarLink[] = [
+export const sidebarLinks = [
   {
     imgURL: "/assets/icons/home.svg",
     route: "/",

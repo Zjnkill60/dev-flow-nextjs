@@ -1,8 +1,13 @@
 "use server";
 import mongoose from "mongoose";
 
+declare global {
+  var connection: {
+    isConnected: number;
+  };
+}
+
 export const connectToDatabase = async () => {
-  //@ts-ignore
   if (global?.connection?.isConnected) {
     console.log("reusing database connection");
     return;
@@ -12,7 +17,6 @@ export const connectToDatabase = async () => {
     dbName: "DevFlow",
   });
 
-  //@ts-ignore
-  global.connection = { isConnected: database.connections[0].readyState };
+  global.connection.isConnected = database.connections[0].readyState;
   console.log("new database connection created");
 };

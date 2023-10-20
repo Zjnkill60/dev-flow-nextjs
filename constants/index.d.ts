@@ -1,5 +1,3 @@
-import { BADGE_CRITERIA } from "@/constants";
-
 export interface SidebarLink {
   imgURL: string;
   route: string;
@@ -44,5 +42,3 @@ export interface BadgeCounts {
   SILVER: number;
   BRONZE: number;
 }
-
-export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;

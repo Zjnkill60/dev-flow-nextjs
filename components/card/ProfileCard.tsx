@@ -36,11 +36,11 @@ const ProfileCard = ({ userData }: { userData: Props }) => {
         alt="Avatar"
         width={100}
         height={100}
-        className="rounded-[999px] mx-auto"
+        className="rounded-[999px] mx-auto mb-2"
       />
       <h2 className="h3-bold text-dark100_light900 my-2">{userData.name}</h2>
       <p className="text-sm text-dark100_light900 my-2">@{userData.username}</p>
-      <div className="flex gap-3 text-xs justify-center ">
+      <div className="flex gap-3 text-xs justify-center mt-auto ">
         {TAGS.map((item) => (
           <RenderTag key={item.name} tagName={item.name} />
         ))}

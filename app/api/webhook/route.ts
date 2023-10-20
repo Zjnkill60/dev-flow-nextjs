@@ -56,9 +56,12 @@ export async function POST(req: Request) {
   if (eventType === "user.created") {
     const { id, email_addresses, image_url, username, first_name, last_name } =
       evt.data;
-    const usernameConfirm = username
-      ? username
-      : email_addresses[0].email_address;
+    let usernameConfirm;
+    if (username !== null) {
+      usernameConfirm = username;
+    } else {
+      usernameConfirm = email_addresses[0].email_address;
+    }
 
     const userMongo = await createUser({
       clerkId: id,

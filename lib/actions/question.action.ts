@@ -10,12 +10,7 @@ interface PropsCreateQuestion {
   title: string;
   content: string;
   tags: string[];
-  views: number;
-  upvotes: string;
-  downvotes: string;
   author: string;
-  answers: string;
-  createdAt: Date;
 }
 
 export async function getQuestion() {

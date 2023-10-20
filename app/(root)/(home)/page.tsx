@@ -10,10 +10,9 @@ import Link from "next/link";
 
 export default async function Home() {
   const active = "newest";
-  //@ts-ignore
-  const resultFetchQuestion = await getQuestion({});
-  //@ts-ignore
-  console.log("resultFetchQuestion : ", resultFetchQuestion[0].tags);
+
+  const resultFetchQuestion = await getQuestion();
+
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">

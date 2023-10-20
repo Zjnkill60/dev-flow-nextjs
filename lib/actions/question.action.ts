@@ -18,13 +18,7 @@ interface PropsCreateQuestion {
   createdAt: Date;
 }
 
-interface PropsGetQuestion {
-  page: number;
-  pageSize: number;
-  query: string;
-}
-
-export async function getQuestion(params: PropsGetQuestion) {
+export async function getQuestion() {
   try {
     connectToDatabase();
     const questions = await QuestionModel.find({})

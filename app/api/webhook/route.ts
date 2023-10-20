@@ -60,7 +60,10 @@ export async function POST(req: Request) {
     if (username !== null) {
       usernameConfirm = username;
     } else {
-      usernameConfirm = email_addresses[0].email_address;
+      usernameConfirm = email_addresses[0].email_address.substring(
+        0,
+        email_addresses[0].email_address.indexOf("@")
+      );
     }
 
     const userMongo = await createUser({

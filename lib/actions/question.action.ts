@@ -43,10 +43,16 @@ export async function createQuestion(params: PropsCreateQuestion) {
       createdAt: new Date(),
     });
 
+    const descriptionTag =
+      "JavaScript, often abbreviated as JS, is a programming language that is one of the core technologies of the World Wide Web, alongside HTML and CSS";
+
     for (var tag of tags) {
       const tagExist = await TagModel.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}`, "i") } },
-        { $setOnInsert: { name: tag }, $push: { questions: question._id } },
+        {
+          $setOnInsert: { name: tag, description: descriptionTag },
+          $push: { questions: question._id },
+        },
         { upsert: true, new: true }
       );
       tagsDocument.push(tagExist);

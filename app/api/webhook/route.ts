@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 //@ts-ignore
 const webhookSecret: string = process.env.WEBHOOK_SECRET;
 
-export default async function handler(
+export default async function POST(
   req: NextApiRequestWithSvixRequiredHeaders,
   res: NextApiResponse
 ) {

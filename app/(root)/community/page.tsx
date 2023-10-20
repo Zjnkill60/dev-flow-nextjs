@@ -1,3 +1,4 @@
+import ProfileCard from "@/components/card/ProfileCard";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import LocalSelect from "@/components/shared/select/LocalSelect";
 import { UserFilters } from "@/constants";
@@ -17,6 +18,13 @@ const CommunityPage = async () => {
           placeholder="Select a Filter"
           filters={UserFilters}
         />
+      </div>
+      <div className="flex gap-5 flex-wrap mt-10">
+        {listUser &&
+          listUser.length > 0 &&
+          listUser.map((item) => (
+            <ProfileCard userData={item} key={item.clerkId} />
+          ))}
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, model, Document, models } from "mongoose";
 
 export interface IUser extends Document {
   clerkId: string;
@@ -15,7 +15,7 @@ export interface IUser extends Document {
   joinedAt: Date;
 }
 
-const UserSchema: Schema = new Schema({
+export const UserSchema: Schema = new Schema({
   clerkId: {
     type: String,
     required: true,
@@ -70,6 +70,5 @@ const UserSchema: Schema = new Schema({
     default: Date.now,
   },
 });
-
-const User = model("users", UserSchema);
-export default User;
+let User = models?.User || model("User", UserSchema);
+export default User; //like this try to export every model in you app like this and it should work

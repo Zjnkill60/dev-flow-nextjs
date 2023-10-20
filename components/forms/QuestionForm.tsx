@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useTransition } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,12 +18,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { questionSchema } from "@/lib/validation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { createQuestion } from "@/lib/actions/question.action";
 
-const QuestionForm = () => {
+const QuestionForm = ({ authorId }: { authorId: string }) => {
+  const router = useRouter();
   const [listTag, setListTag] = useState<any>([]);
   const [isSubmiting, setSubmiting] = useState<boolean>(false);
   const editorRef = useRef(null);
-
+  console.log(authorId);
   const log = () => {
     if (editorRef.current) {
       // @ts-ignore
@@ -41,9 +44,20 @@ const QuestionForm = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof questionSchema>) {
+  async function onSubmit(values: z.infer<typeof questionSchema>) {
     setSubmiting(true);
-    console.log(values);
+    try {
+      //@ts-ignore
+      await createQuestion({
+        title: values.title,
+        content: values.explantion,
+        tags: values.tags,
+        author: JSON.parse(authorId),
+      });
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleAddNewTags = (

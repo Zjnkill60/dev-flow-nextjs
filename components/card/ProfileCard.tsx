@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import RenderTag from "../shared/RenderTag";
+import Link from "next/link";
 
 interface Props {
   clerkId: string;
@@ -30,22 +31,26 @@ const TAGS = [
 
 const ProfileCard = ({ userData }: { userData: Props }) => {
   return (
-    <div className="min-w-[280px] background-light900_dark200 py-8 px-5 justify-between text-center light-border border rounded-md">
-      <Image
-        src={userData.picture}
-        alt="Avatar"
-        width={100}
-        height={100}
-        className="rounded-[999px] mx-auto mb-2"
-      />
-      <h2 className="h3-bold text-dark100_light900 my-2">{userData.name}</h2>
-      <p className="text-sm text-dark100_light900 my-2">@{userData.username}</p>
-      <div className="flex gap-3 text-xs justify-center mt-auto ">
-        {TAGS.map((item) => (
-          <RenderTag key={item.name} tagName={item.name} />
-        ))}
-      </div>
-    </div>
+    <article className="min-w-[280px] shadow-sm  background-light900_dark200 py-8 px-5 text-center light-border border rounded-md ">
+      <Link href={`profile/${userData.clerkId}`}>
+        <Image
+          src={userData.picture}
+          alt="Avatar"
+          width={100}
+          height={100}
+          className="rounded-[999px] mx-auto "
+        />
+        <h2 className="h3-bold text-dark100_light900 mt-4">{userData.name}</h2>
+        <p className="text-sm text-dark100_light900 mt-2">
+          @{userData.username}
+        </p>
+        <div className="flex gap-3 text-xs justify-center mt-5 ">
+          {TAGS.map((item) => (
+            <RenderTag key={item.name} tagName={item.name} />
+          ))}
+        </div>
+      </Link>
+    </article>
   );
 };
 

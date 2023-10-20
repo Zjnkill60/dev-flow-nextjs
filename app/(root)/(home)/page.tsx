@@ -28,6 +28,7 @@ export default async function Home() {
         <LocalSearch placeholder={"Search question..."} />
         <LocalSelect
           filters={HomePageFilters}
+          classOther={"md:hidden"}
           placeholder={"Select a Filter"}
         />
       </div>

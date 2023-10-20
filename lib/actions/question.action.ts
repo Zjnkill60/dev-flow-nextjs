@@ -32,7 +32,6 @@ export async function getQuestion() {
 }
 
 export async function createQuestion(params: PropsCreateQuestion) {
-  console.log("params :", params);
   try {
     connectToDatabase();
     const tagsDocument = [];

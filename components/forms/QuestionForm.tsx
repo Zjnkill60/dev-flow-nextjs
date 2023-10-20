@@ -26,7 +26,6 @@ const QuestionForm = ({ authorId }: { authorId: string }) => {
   const [listTag, setListTag] = useState<any>([]);
   const [isSubmiting, setSubmiting] = useState<boolean>(false);
   const editorRef = useRef(null);
-  console.log(authorId);
   const log = () => {
     if (editorRef.current) {
       // @ts-ignore

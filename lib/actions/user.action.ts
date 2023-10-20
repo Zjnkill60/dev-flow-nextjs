@@ -3,7 +3,7 @@ import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
 
 interface Props {
-  clerkId: string;
+  clerkId: string | null;
 }
 
 interface ICreateUSer {
@@ -22,13 +22,8 @@ interface IUpdateUser {
   clerkId: string;
   dataUpdate: {
     name: string;
-    username: string;
-    email: string;
-    password?: string;
-    bio?: string;
+
     picture: string;
-    location?: string;
-    portfolioWebsite?: string;
   };
 }
 
@@ -37,6 +32,16 @@ export async function getUserByClerkId(params: Props) {
   try {
     connectToDatabase();
     const user = await User.findOne({ clerkId });
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getAllUser() {
+  try {
+    connectToDatabase();
+    const user = await User.find({});
     return user;
   } catch (error) {
     console.log(error);

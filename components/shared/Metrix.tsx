@@ -17,7 +17,7 @@ const Metrix = ({ imgUrl, alt, value, title, href }: Props) => {
           src={imgUrl}
           width={20}
           height={20}
-          className="invert-colors"
+          className=" rounded-[999px]"
           alt={alt}
         />
 

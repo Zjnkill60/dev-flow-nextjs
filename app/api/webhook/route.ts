@@ -59,8 +59,8 @@ export async function POST(req: Request) {
 
     const userMongo = await createUser({
       clerkId: id,
-      name: first_name + last_name,
-      username: username!,
+      name: first_name + " " + last_name,
+      username: username ? username : email_addresses[0].email_address,
       email: email_addresses[0].email_address,
       picture: image_url,
     });
@@ -68,15 +68,12 @@ export async function POST(req: Request) {
   }
 
   if (eventType === "user.updated") {
-    const { id, email_addresses, image_url, username, first_name, last_name } =
-      evt.data;
+    const { id, image_url, first_name, last_name } = evt.data;
 
     const userMongo = await updateUser({
       clerkId: id,
       dataUpdate: {
-        name: first_name + last_name,
-        username: username!,
-        email: email_addresses[0].email_address,
+        name: first_name + " " + last_name,
         picture: image_url,
       },
     });

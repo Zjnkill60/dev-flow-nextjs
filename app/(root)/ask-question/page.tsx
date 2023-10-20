@@ -2,11 +2,12 @@
 import QuestionForm from "@/components/forms/QuestionForm";
 import { IUser } from "@/database/user.model";
 import { getUserByClerkId } from "@/lib/actions/user.action";
+import { auth } from "@clerk/nextjs";
 import React from "react";
 
 const AskQuestion = async () => {
-  const clerkId = "1234";
-  const author: IUser = await getUserByClerkId({ clerkId });
+  const { userId } = auth();
+  const author: IUser = await getUserByClerkId({ clerkId: userId });
   console.log("page ask render", author);
   return (
     <div>

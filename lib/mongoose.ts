@@ -1,12 +1,18 @@
+"use server";
 import mongoose from "mongoose";
-const url = "mongodb+srv://zjnkill18:nho812005@devflow.1wyv3tg.mongodb.net/";
 
-export async function connectToDatabase() {
-  try {
-    await mongoose.connect(url);
-
-    console.log("connect success !");
-  } catch (err) {
-    console.log(err);
+export const connectToDatabase = async () => {
+  //@ts-ignore
+  if (global?.connection?.isConnected) {
+    console.log("reusing database connection");
+    return;
   }
-}
+  mongoose.set("strictQuery", false);
+  const database = await mongoose.connect(String(process.env.DB_MONGODB_URL), {
+    dbName: "DevFlow",
+  });
+
+  //@ts-ignore
+  global.connection = { isConnected: database.connections[0].readyState };
+  console.log("new database connection created");
+};

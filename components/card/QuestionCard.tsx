@@ -5,7 +5,9 @@ import Metrix from "../shared/Metrix";
 
 interface Props {
   title: string;
-  tags: string[];
+  tags: {
+    name: string;
+  }[];
   author: {
     _id: string;
     name: string;
@@ -25,6 +27,7 @@ export const QuestionCard = ({
   answers,
   createdAt,
 }: Props) => {
+  console.log("tags : ", tags);
   return (
     <div className="card-wrapper flex w-full flex-col px-14 py-7 max-md:px-7">
       <div>
@@ -37,7 +40,7 @@ export const QuestionCard = ({
       </div>
       <div className="mt-5 flex gap-5 text-xs">
         {tags.map((item) => (
-          <RenderTag key={item} tagName={item} />
+          <RenderTag key={item.name} tagName={item.name} />
         ))}
       </div>
 

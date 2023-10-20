@@ -1,4 +1,4 @@
-import { Schema, Model, model } from "mongoose";
+import mongoose, { Schema, Model, model,models } from "mongoose";
 
 export interface ITags {
   name: string;
@@ -37,4 +37,5 @@ const TagsSchema: Schema = new Schema({
   },
 });
 
-export const TagsModel: Model<ITags> = model<ITags>("Tags", TagsSchema);
+const TagModel = models?.Tag || model("Tag", TagsSchema);
+export default TagModel //like this try to export every model in you app like this and it should work

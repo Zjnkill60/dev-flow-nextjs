@@ -20,9 +20,11 @@ import { questionSchema } from "@/lib/validation";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createQuestion } from "@/lib/actions/question.action";
+import { useTheme } from "@/context/ThemeProvider";
 
 const QuestionForm = ({ authorId }: { authorId: string }) => {
   const router = useRouter();
+  const { mode } = useTheme();
   const [listTag, setListTag] = useState<any>([]);
   const [isSubmiting, setSubmiting] = useState<boolean>(false);
   const editorRef = useRef(null);
@@ -32,6 +34,19 @@ const QuestionForm = ({ authorId }: { authorId: string }) => {
       console.log(editorRef.current?.getContent());
     }
   };
+
+  const getThemeStyle = () => {
+    if (mode === "dark") {
+      return "oxide-dark";
+    } else {
+      return "oxide";
+    }
+  };
+
+  const getSkinStyle = () => {
+    return mode === "dark" ? "dark" : "light";
+  };
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof questionSchema>>({
     resolver: zodResolver(questionSchema),
@@ -96,6 +111,7 @@ const QuestionForm = ({ authorId }: { authorId: string }) => {
     }
   };
 
+  console.log(mode);
   return (
     <Form {...form}>
       <form
@@ -172,6 +188,8 @@ const QuestionForm = ({ authorId }: { authorId: string }) => {
                       "removeformat | help",
                     content_style:
                       "body { font-family:Helvetica,Arial,sans-serif; font-size:14px}",
+                    skin: getThemeStyle(),
+                    content_css: getSkinStyle(),
                   }}
                 />
               </FormControl>

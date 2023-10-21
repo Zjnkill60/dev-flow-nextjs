@@ -37,7 +37,7 @@ const POPULAR_TAG = [
 const RightSideBar = () => {
   return (
     <section
-      className="background-light900_dark200 light-border custom-scrollbar sticky right-0 top-0 flex min-h-screen w-[350px] flex-col
+      className="background-light900_dark200 light-border custom-scrollbar sticky right-0 top-0 flex h-screen w-[350px] flex-col
     border-l p-8 pt-36 shadow-light-300 max-xl:hidden"
     >
       <p className="text-dark200_light900 h3-bold mb-8">Top Questions</p>
@@ -49,7 +49,7 @@ const RightSideBar = () => {
         >
           <p className="text-dark500_light700">{item}</p>
           <Image
-            src="assets/icons/chevron-right.svg"
+            src="/assets/icons/chevron-right.svg"
             alt="arrow"
             width={20}
             height={20}

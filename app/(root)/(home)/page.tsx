@@ -53,6 +53,7 @@ export default async function Home() {
           resultFetchQuestion.map((item) => (
             <QuestionCard
               key={item.title}
+              id={item._id}
               title={item.title}
               tags={item.tags}
               author={item.author}

@@ -36,12 +36,17 @@ export function getTimeAgo(date: Date) {
   }
 }
 
-export function shortenNumber(number: number) {
-  if (number >= 1000000) {
-    return (number / 1000000).toFixed(1) + "M";
-  } else if (number >= 1000) {
-    return (number / 1000).toFixed(1) + "K";
+export function shortenNumber(number: number | string | null) {
+  if (number === null) {
+    return "";
+  }
+  const castNumber = Number(number);
+
+  if (castNumber >= 1000000) {
+    return (castNumber / 1000000).toFixed(1) + "M";
+  } else if (castNumber >= 1000) {
+    return (castNumber / 1000).toFixed(1) + "K";
   } else {
-    return number.toString();
+    return castNumber.toString();
   }
 }

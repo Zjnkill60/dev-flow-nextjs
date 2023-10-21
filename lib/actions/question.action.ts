@@ -13,10 +13,34 @@ interface PropsCreateQuestion {
   author: string;
 }
 
+interface PropsGetQuestionById {
+  id: string;
+}
+
 export async function getQuestion() {
   try {
     connectToDatabase();
     const questions = await QuestionModel.find({})
+      .populate({
+        path: "author",
+        model: User,
+        select: "name picture clerkId",
+      })
+      .populate({
+        path: "tags",
+        model: TagModel,
+        select: "name",
+      });
+    return questions;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getQuestionById(params: PropsGetQuestionById) {
+  try {
+    connectToDatabase();
+    const questions = await QuestionModel.findById({ _id: params.id })
       .populate({
         path: "author",
         model: User,

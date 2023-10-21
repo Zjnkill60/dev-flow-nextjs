@@ -55,7 +55,7 @@ const MoblieNav = () => {
     <Sheet>
       <SheetTrigger>
         <Image
-          src="assets/icons/hamburger.svg"
+          src="/assets/icons/hamburger.svg"
           width={36}
           height={36}
           alt="Menu"

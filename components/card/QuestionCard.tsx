@@ -2,7 +2,6 @@ import { getTimeAgo } from "@/lib/utils";
 import React from "react";
 import RenderTag from "../shared/RenderTag";
 import Metrix from "../shared/Metrix";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface Props {

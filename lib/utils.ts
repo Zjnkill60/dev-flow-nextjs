@@ -36,12 +36,37 @@ export function getTimeAgo(date: Date) {
   }
 }
 
-export function shortenNumber(number: number) {
-  if (number >= 1000000) {
-    return (number / 1000000).toFixed(1) + "M";
-  } else if (number >= 1000) {
-    return (number / 1000).toFixed(1) + "K";
-  } else {
-    return number.toString();
+export function shortenNumber(number: number | string | null) {
+  if (number === null) {
+    return "";
   }
+  const castNumber = Number(number);
+
+  if (castNumber >= 1000000) {
+    return (castNumber / 1000000).toFixed(1) + "M";
+  } else if (castNumber >= 1000) {
+    return (castNumber / 1000).toFixed(1) + "K";
+  } else {
+    return castNumber.toString();
+  }
+}
+
+export function formatDate(date: Date): string {
+  const options: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
+  return date.toLocaleString("en-US", options);
+}
+
+export function formatMonthYear(date: Date): string {
+  const options: Intl.DateTimeFormatOptions = {
+    month: "long",
+    year: "numeric",
+  };
+  return date.toLocaleDateString("en-US", options);
 }

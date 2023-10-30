@@ -6,8 +6,12 @@ const ThemeContext = createContext<
   { mode: string; setMode: (mode: string) => void } | undefined
 >(undefined);
 
+var themeDefault: string;
+if (typeof window !== "undefined") {
+  themeDefault = localStorage?.theme ? localStorage.theme : "light";
+}
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState(themeDefault);
 
   const handleThemeChange = () => {
     if (

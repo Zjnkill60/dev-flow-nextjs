@@ -15,12 +15,14 @@ interface Filter {
 const LocalSelect = ({
   placeholder,
   filters,
+  classOther,
 }: {
+  classOther: string;
   placeholder: string;
   filters: Filter[];
 }) => {
   return (
-    <div className="md:hidden">
+    <div className={`${classOther}`}>
       <Select>
         <SelectTrigger
           className="background-light800_dark300 text-dark500_light500 light-border

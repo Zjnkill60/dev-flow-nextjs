@@ -5,19 +5,19 @@ import React from "react";
 interface Props {
   imgUrl: string;
   alt: string;
-  value: number | string;
+  value: number | string | null;
   title: string;
   href: string | null;
 }
 const Metrix = ({ imgUrl, alt, value, title, href }: Props) => {
   if (href) {
     return (
-      <Link href={href} className="flex gap-2">
+      <Link href={href} className="flex gap-1 items-center">
         <Image
           src={imgUrl}
-          width={20}
-          height={20}
-          className="invert-colors"
+          width={16}
+          height={16}
+          className=" rounded-[999px]"
           alt={alt}
         />
 
@@ -28,16 +28,16 @@ const Metrix = ({ imgUrl, alt, value, title, href }: Props) => {
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1 items-center">
       <Image
         src={imgUrl}
-        width={20}
-        height={20}
+        width={16}
+        height={16}
         className="invert-colors"
         alt={alt}
       />
 
-      <p>{shortenNumber(Number(value))}</p>
+      <p>{shortenNumber(value)}</p>
       <p>{title}</p>
     </div>
   );

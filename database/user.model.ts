@@ -26,7 +26,7 @@ export const UserSchema: Schema = new Schema({
   },
   username: {
     type: String,
-    required: true,
+
     unique: true,
   },
   email: {

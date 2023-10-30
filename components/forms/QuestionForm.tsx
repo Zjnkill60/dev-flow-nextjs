@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useTransition } from "react";
+import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,27 +19,49 @@ import { Input } from "@/components/ui/input";
 import { questionSchema } from "@/lib/validation";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
+import { useTheme } from "@/context/ThemeProvider";
 
-const QuestionForm = ({ authorId }: { authorId: string }) => {
+interface Props {
+  authorId:string 
+  type:string 
+  questionDetail?:string
+}
+const QuestionForm = ({ authorId ,type,questionDetail}: Props) => {
   const router = useRouter();
+  const { mode } = useTheme();
   const [listTag, setListTag] = useState<any>([]);
   const [isSubmiting, setSubmiting] = useState<boolean>(false);
   const editorRef = useRef(null);
-  console.log(authorId);
+
+  const parseQuestionDetail = questionDetail && JSON.parse(questionDetail || '') 
+  const tagsDetail = parseQuestionDetail?.tags?.map((item: { name: string; }) => item.name)
   const log = () => {
     if (editorRef.current) {
       // @ts-ignore
       console.log(editorRef.current?.getContent());
     }
   };
+
+  const getThemeStyle = () => {
+    if (mode === "dark") {
+      return "oxide-dark";
+    } else {
+      return "oxide";
+    }
+  };
+
+  const getSkinStyle = () => {
+    return mode === "dark" ? "dark" : "light";
+  };
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof questionSchema>>({
     resolver: zodResolver(questionSchema),
     defaultValues: {
-      title: "",
-      explantion: "",
-      tags: [],
+      title: parseQuestionDetail?.title|| "",
+      explantion: parseQuestionDetail?.content|| "",
+      tags: tagsDetail || [],
     },
   });
 
@@ -47,13 +69,22 @@ const QuestionForm = ({ authorId }: { authorId: string }) => {
   async function onSubmit(values: z.infer<typeof questionSchema>) {
     setSubmiting(true);
     try {
-      //@ts-ignore
-      await createQuestion({
-        title: values.title,
-        content: values.explantion,
-        tags: values.tags,
-        author: JSON.parse(authorId),
-      });
+      if(type === "Create") {
+        await createQuestion({
+          title: values.title,
+          content: values.explantion,
+          tags: values.tags,
+          author: JSON.parse(authorId),
+        });
+      }
+
+      if(type === "Edit") {
+        await editQuestion({
+          title: values.title,
+          content: values.explantion,
+          questionId:parseQuestionDetail._id
+        });
+      }
       router.push("/");
     } catch (error) {
       console.log(error);
@@ -174,7 +205,10 @@ const QuestionForm = ({ authorId }: { authorId: string }) => {
                       "removeformat | help",
                     content_style:
                       "body { font-family:Helvetica,Arial,sans-serif; font-size:14px}",
+                    skin: getThemeStyle(),
+                    content_css: getSkinStyle(),
                   }}
+                  initialValue={questionDetail ? parseQuestionDetail.content || "" : ""}
                 />
               </FormControl>
               <FormDescription className="body-regular text-xs text-light-500">
@@ -197,6 +231,7 @@ const QuestionForm = ({ authorId }: { authorId: string }) => {
               <FormControl>
                 <>
                   <Input
+                    disabled={type === "Edit"}
                     onKeyDown={(e) => handleAddNewTags(e, field)}
                     placeholder="Add tags"
                     className="background-light900_dark300 text-dark300_light700 no-focus light-border-2 min-h-[56px] border"
@@ -209,14 +244,16 @@ const QuestionForm = ({ authorId }: { authorId: string }) => {
                           className="background-light800_dark400 text-light400_light500 flex items-center gap-2 rounded-md p-2 text-xs"
                         >
                           <p>{item}</p>
+                          {type !== "Edit" && <>
                           <Image
                             onClick={() => handleRemoveTagByTagName(item)}
-                            src="assets/icons/close.svg"
+                            src="/assets/icons/close.svg"
                             width={12}
                             height={12}
                             alt="close"
                             className="cursor-pointer object-contain dark:invert "
                           />
+                          </>}
                         </div>
                       ))}
                   </div>
@@ -237,7 +274,8 @@ const QuestionForm = ({ authorId }: { authorId: string }) => {
             onClick={log}
             type="submit"
           >
-            {!isSubmiting ? "Ask a question" : "Posting..."}
+            {!isSubmiting ? (type === "Create" ? "Ask a question" : "Edit question") :
+            (type === "Edit"? "Editing..." : "Posting...")}
           </Button>
         </div>
       </form>

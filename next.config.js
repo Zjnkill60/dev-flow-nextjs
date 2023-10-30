@@ -1,7 +1,15 @@
-
 module.exports = {
+  reactStrictMode: false,
   experimental: {
     serverActions: true,
-    serverComponentsExternalPackages: ["mongoose"] 
+    serverComponentsExternalPackages: ["mongoose"],
   },
-}
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*",
+      },
+    ],
+  },
+};

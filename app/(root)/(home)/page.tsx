@@ -6,14 +6,16 @@ import LocalSelect from "@/components/shared/select/LocalSelect";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants";
 import { getQuestion } from "@/lib/actions/question.action";
+import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 
-export default async function Home() {
+export default async function Home({searchParams} : {searchParams : {q : string}}) {
   const active = "newest";
-  //@ts-ignore
-  const resultFetchQuestion = await getQuestion({});
-  //@ts-ignore
-  console.log("resultFetchQuestion : ", resultFetchQuestion[0].tags);
+  const { userId } = auth()
+  const resultFetchQuestion = await getQuestion(
+    {searchQuery : searchParams.q}
+  );
+
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -29,6 +31,7 @@ export default async function Home() {
         <LocalSearch placeholder={"Search question..."} />
         <LocalSelect
           filters={HomePageFilters}
+          classOther={"md:hidden"}
           placeholder={"Select a Filter"}
         />
       </div>
@@ -52,7 +55,10 @@ export default async function Home() {
           resultFetchQuestion &&
           resultFetchQuestion.map((item) => (
             <QuestionCard
+
               key={item.title}
+              clerkId={userId}
+              id={item._id}
               title={item.title}
               tags={item.tags}
               author={item.author}

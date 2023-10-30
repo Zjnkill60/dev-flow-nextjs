@@ -46,7 +46,7 @@ const ProfileCard = ({ userData }: { userData: Props }) => {
         </p>
         <div className="flex gap-3 text-xs justify-center mt-5 ">
           {TAGS.map((item) => (
-            <RenderTag key={item.name} tagName={item.name} />
+            <RenderTag _id={item.name} key={item.name} tagName={item.name} />
           ))}
         </div>
       </Link>

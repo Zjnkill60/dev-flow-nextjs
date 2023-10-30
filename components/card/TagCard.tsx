@@ -15,7 +15,7 @@ const TagCard = ({ tagData }: { tagData: Props }) => {
     <article className="w-[260px] shadow-sm  background-light900_dark200 py-8 px-5  light-border border rounded-md max-sm:w-full ">
       <Link href={`tags/${tagData._id}`}>
         <div className="max-w-[100px] max-h-[50px] text-md body-semibold text-dark300_light900 text-center ">
-          <RenderTag tagName={tagData.name} />
+          <RenderTag tagName={tagData.name} _id={tagData._id} />
         </div>
         <p className="text-xs text-dark100_light900 my-5 leading-normal">
           {tagData.description}

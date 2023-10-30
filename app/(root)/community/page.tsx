@@ -5,8 +5,10 @@ import { UserFilters } from "@/constants";
 import { getAllUser } from "@/lib/actions/user.action";
 import React from "react";
 
-const CommunityPage = async () => {
-  const listUser = await getAllUser();
+const CommunityPage = async ({searchParams} : {searchParams : {q : string}}) => {
+  const listUser = await getAllUser(
+    {searchQuery : searchParams.q}
+  );
   console.log("listUser : ", listUser);
   return (
     <>

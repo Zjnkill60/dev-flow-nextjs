@@ -5,11 +5,7 @@ import { TagFilters } from "@/constants";
 import { getTags } from "@/lib/actions/tags.action";
 import React from "react";
 
-const dataQuery = {
-  page: 0,
-  pageSize: 0,
-  query: "123",
-};
+
 
 interface Props {
   _id: string;
@@ -18,7 +14,13 @@ interface Props {
   questions: string[];
   followers: string[];
 }
-const TagPage = async () => {
+const TagPage = async ({searchParams} : {searchParams : {q : string}}) => {
+  const dataQuery = {
+    page: 0,
+    pageSize: 0,
+    queryString: searchParams.q,
+  };
+
   const listTag = (await getTags(dataQuery)) as Props[];
   return (
     <>

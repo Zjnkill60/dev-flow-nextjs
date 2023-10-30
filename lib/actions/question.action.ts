@@ -5,6 +5,9 @@ import { connectToDatabase } from "../mongoose";
 import TagModel from "@/database/tags.model";
 import { revalidatePath } from "next/cache";
 import User from "@/database/user.model";
+import Answer from "@/database/answer.model";
+import InteractionModel from "@/database/interaction.model";
+import { FilterQuery } from "mongoose";
 
 interface PropsCreateQuestion {
   title: string;
@@ -14,13 +17,72 @@ interface PropsCreateQuestion {
 }
 
 interface PropsGetQuestionById {
-  id: string;
+  id: number;
 }
 
-export async function getQuestion() {
+interface PropsVotingAction {
+  typeAction: string;
+  questionId: string;
+  userId: string;
+  isUpvoted: boolean;
+  isDownvoted: boolean;
+}
+
+export async function handleVotingActionQuestion(params: PropsVotingAction) {
+  const { typeAction, questionId, userId, isUpvoted, isDownvoted } = params;
   try {
     connectToDatabase();
-    const questions = await QuestionModel.find({})
+    let queryUpdate = {};
+    if (typeAction === "upvote") {
+      if (isUpvoted) {
+        queryUpdate = { $pull: { upvotes: userId } };
+      } else if (isDownvoted) {
+        queryUpdate = {
+          $pull: { downvotes: userId },
+          $push: { upvotes: userId },
+        };
+      } else {
+        queryUpdate = { $push: { upvotes: userId } };
+      }
+    }
+
+    if (typeAction === "downvote") {
+      if (isUpvoted) {
+        queryUpdate = {
+          $pull: { upvotes: userId },
+          $push: { downvotes: userId },
+        };
+      } else if (isDownvoted) {
+        queryUpdate = { $pull: { downvotes: userId } };
+      } else {
+        queryUpdate = { $push: { downvotes: userId } };
+      }
+    }
+    console.log(queryUpdate);
+    const questions = await QuestionModel.findByIdAndUpdate(
+      { _id: params.questionId },
+      queryUpdate,
+      { new: true }
+    );
+
+    revalidatePath(`questions/${questionId}`);
+    return questions;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getQuestion({searchQuery} : {searchQuery:string}) {
+  try {
+    connectToDatabase();
+
+    const query:FilterQuery<typeof QuestionModel> = {}
+    if(searchQuery) {
+      query.$or = [
+        {title : {$regex: new RegExp(searchQuery,'i')}}
+      ]
+    }
+    const questions = await QuestionModel.find(query)
       .populate({
         path: "author",
         model: User,
@@ -50,6 +112,33 @@ export async function getQuestionById(params: PropsGetQuestionById) {
         model: TagModel,
       });
     return questions;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+export async function removeAQuestion({_id,clerkId} : {_id : string,clerkId:string}) {
+  try {
+    connectToDatabase();
+    await QuestionModel.deleteOne({ _id})
+    await Answer.deleteMany({question:_id})
+    await TagModel.updateMany({},{$pull : {question:_id}})
+    await InteractionModel.deleteMany({question:_id})
+    revalidatePath(`/profile/${clerkId}`)
+     
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function editQuestion({title,content,questionId} : {title:string,content:string,questionId:string}) {
+  try {
+    connectToDatabase();
+    await QuestionModel.updateOne({_id:questionId},{title,content})
+  
+    revalidatePath(`/`)
+     
   } catch (error) {
     console.log(error);
   }
@@ -88,6 +177,18 @@ export async function createQuestion(params: PropsCreateQuestion) {
     );
 
     revalidatePath("/");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getTop5HotQuestion() {
+  try {
+    connectToDatabase();
+    const tag = await QuestionModel.find({}).limit(5).sort({upvotes:-1,view:-1})
+  
+
+    return tag;
   } catch (error) {
     console.log(error);
   }

@@ -6,12 +6,15 @@ import LocalSelect from "@/components/shared/select/LocalSelect";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants";
 import { getQuestion } from "@/lib/actions/question.action";
+import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 
-export default async function Home() {
+export default async function Home({searchParams} : {searchParams : {q : string}}) {
   const active = "newest";
-
-  const resultFetchQuestion = await getQuestion();
+  const { userId } = auth()
+  const resultFetchQuestion = await getQuestion(
+    {searchQuery : searchParams.q}
+  );
 
   return (
     <>
@@ -52,7 +55,9 @@ export default async function Home() {
           resultFetchQuestion &&
           resultFetchQuestion.map((item) => (
             <QuestionCard
+
               key={item.title}
+              clerkId={userId}
               id={item._id}
               title={item.title}
               tags={item.tags}

@@ -72,15 +72,36 @@ export async function handleVotingActionQuestion(params: PropsVotingAction) {
   }
 }
 
-export async function getQuestion({searchQuery} : {searchQuery:string}) {
+export async function getQuestion({searchQuery,filterQuery} : {searchQuery:string,filterQuery:string}) {
   try {
     connectToDatabase();
 
     const query:FilterQuery<typeof QuestionModel> = {}
+    let sort = {}
     if(searchQuery) {
       query.$or = [
         {title : {$regex: new RegExp(searchQuery,'i')}}
       ]
+    }
+
+    if(filterQuery) {
+      switch (filterQuery) {
+        case "newest":
+          sort = {createdAt : -1}
+          break;
+        case "recommended":
+          sort = {upvotes : -1}
+          break;
+        case "frequent":
+          sort = {views : -1}
+          break;
+        case "unanswered":
+          query.answers = {$size : 0}
+          break;
+      
+        default:
+          break;
+      }
     }
     const questions = await QuestionModel.find(query)
       .populate({
@@ -92,7 +113,8 @@ export async function getQuestion({searchQuery} : {searchQuery:string}) {
         path: "tags",
         model: TagModel,
         select: "name",
-      });
+      })
+      .sort(sort);
     return questions;
   } catch (error) {
     console.log(error);

@@ -9,15 +9,17 @@ const LocalSearch = ({ placeholder }: { placeholder: string }) => {
   const router = useRouter()
   const pathName = usePathname()
   const searchParams = useSearchParams()
-  const query = searchParams.get('q')
+  const querySearch = searchParams.get('q')
+  const queryFilter = searchParams.get('filter')
 
 
-  const [search,setSearch] = useState(query || "")
+  const [search,setSearch] = useState(querySearch || "")
   useEffect(() => {
+    console.log("render search bar : ",searchParams.get("filter"))
     let timeout:any
     if(search) {
       timeout = setTimeout(() => {
-        router.push(`?q=${search}`)
+        queryFilter ? router.push(`?q=${search}?filter=${queryFilter}`) : router.push(`?q=${search}`)
         console.log(search)
       },300)
     }else {
@@ -26,7 +28,7 @@ const LocalSearch = ({ placeholder }: { placeholder: string }) => {
 
     return () => clearTimeout(timeout)
 
-  },[search,pathName,query])
+  },[search,querySearch])
   return (
     <div className="relative w-full ">
       <div className="background-light800_darkgradient relative flex min-h-[56px]  items-center gap-11 rounded-xl px-4">

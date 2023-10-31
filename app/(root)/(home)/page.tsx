@@ -1,5 +1,6 @@
 "use server";
 import { QuestionCard } from "@/components/card/QuestionCard";
+import HomePageFilter from "@/components/shared/HomePageFilter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import LocalSelect from "@/components/shared/select/LocalSelect";
@@ -9,13 +10,13 @@ import { getQuestion } from "@/lib/actions/question.action";
 import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 
-export default async function Home({searchParams} : {searchParams : {q : string}}) {
-  const active = "newest";
+export default async function Home({searchParams} : {searchParams : {q : string,filter:string}}) {
+
   const { userId } = auth()
   const resultFetchQuestion = await getQuestion(
-    {searchQuery : searchParams.q}
+    {searchQuery : searchParams.q , filterQuery : searchParams.filter}
   );
-
+    console.log("home render", searchParams.filter)
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -36,18 +37,7 @@ export default async function Home({searchParams} : {searchParams : {q : string}
         />
       </div>
       <div className="mt-10 flex items-center gap-5 max-md:hidden">
-        {HomePageFilters.map((item) => (
-          <Button
-            className={`rounded-md px-5 py-2 ${
-              active === item.value
-                ? " bg-primary-100 font-semibold text-primary-500"
-                : "background-light800_dark400 text-light400_light500 "
-            }`}
-            key={item.name}
-          >
-            {item.name}
-          </Button>
-        ))}
+        <HomePageFilter HomePageFilters={HomePageFilters}/>
       </div>
 
       <div className="mt-10 flex flex-col items-center gap-10">
